@@ -18,7 +18,7 @@ package main
 
 import (
 	"example.com/foo"
-	"github.com/google/wire"
+	"github.com/lorexzer0/wire"
 )
 
 func injectFooer() foo.Fooer {

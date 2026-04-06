@@ -16,7 +16,7 @@
 
 package bar
 
-import "github.com/google/wire"
+import "github.com/lorexzer0/wire"
 
 // Set provides a friendly user greeting.
 var Set = wire.NewSet(wire.Value("Hello, World!"))

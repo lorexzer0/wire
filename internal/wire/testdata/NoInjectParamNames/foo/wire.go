@@ -19,7 +19,7 @@ package main
 import (
 	stdcontext "context"
 
-	"github.com/google/wire"
+	"github.com/lorexzer0/wire"
 )
 
 // The notable characteristic of this test is that there are no

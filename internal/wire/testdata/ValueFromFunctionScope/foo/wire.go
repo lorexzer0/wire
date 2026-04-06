@@ -17,7 +17,7 @@
 package main
 
 import (
-	"github.com/google/wire"
+	"github.com/lorexzer0/wire"
 )
 
 func injectBar(f *foo) *bar {

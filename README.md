@@ -1,12 +1,11 @@
 # Wire: Automated Initialization in Go
 
-[![Build Status](https://github.com/google/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/google/wire/actions)
-[![godoc](https://godoc.org/github.com/google/wire?status.svg)][godoc]
+[![Build Status](https://github.com/lorexzer0/wire/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/lorexzer0/wire/actions)
+[![godoc](https://godoc.org/github.com/lorexzer0/wire?status.svg)][godoc]
 
-> [!WARNING]
-> This project is no longer maintained.
->
-> If you wish to update or extend wire, please do so in a fork.
+> [!NOTE]
+> This is an actively maintained fork of [google/wire](https://github.com/google/wire), which is no longer maintained.
+> Maintained by [@lorexzer0](https://github.com/lorexzer0).
 
 Wire is a code generation tool that automates connecting components using
 [dependency injection][]. Dependencies between components are represented in
@@ -19,7 +18,7 @@ For an overview, see the [introductory blog post][].
 
 [dependency injection]: https://en.wikipedia.org/wiki/Dependency_injection
 [introductory blog post]: https://blog.golang.org/wire
-[godoc]: https://godoc.org/github.com/google/wire
+[godoc]: https://godoc.org/github.com/lorexzer0/wire
 [travis]: https://travis-ci.com/google/wire
 
 ## Installing
@@ -27,7 +26,7 @@ For an overview, see the [introductory blog post][].
 Install Wire by running:
 
 ```shell
-go install github.com/google/wire/cmd/wire@latest
+go install github.com/lorexzer0/wire/cmd/wire@latest
 ```
 
 and ensuring that `$GOPATH/bin` is added to your `$PATH`.
@@ -46,18 +45,13 @@ and ensuring that `$GOPATH/bin` is added to your `$PATH`.
 
 ## Project status
 
-As of version v0.3.0, Wire is *beta* and is considered feature complete. It
-works well for the tasks it was designed to perform, and we prefer to keep it
-as simple as possible.
-
-We'll not be accepting new features at this time, but will gladly accept bug
-reports and fixes.
+This fork picks up where [google/wire](https://github.com/google/wire) left off.
+Bug reports, fixes, and feature proposals are welcome — please open an issue or pull request.
 
 ## Community
 
-For questions, please use [GitHub Discussions](https://github.com/google/wire/discussions).
+For questions, please use [GitHub Discussions](https://github.com/lorexzer0/wire/discussions).
 
 This project is covered by the Go [Code of Conduct][].
 
 [Code of Conduct]: ./CODE_OF_CONDUCT.md
-[go-cloud mailing list]: https://groups.google.com/forum/#!forum/go-cloud
