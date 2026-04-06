@@ -66,6 +66,10 @@ type GenerateOptions struct {
 	Header           []byte
 	PrefixOutputFile string
 	Tags             string
+	// WrapErrors wraps provider errors with the provider name using fmt.Errorf.
+	// This changes the generated error return from "return ..., err" to
+	// "return ..., fmt.Errorf("providerName: %w", err)".
+	WrapErrors bool
 }
 
 // Generate performs dependency injection for the packages that match the given
@@ -97,7 +101,7 @@ func Generate(ctx context.Context, wd string, env []string, patterns []string, o
 			continue
 		}
 		generated[i].OutputPath = filepath.Join(outDir, opts.PrefixOutputFile+"wire_gen.go")
-		g := newGen(pkg)
+		g := newGen(pkg, opts)
 		injectorFiles, errs := generateInjectors(g, pkg)
 		if len(errs) > 0 {
 			generated[i].Errs = errs
@@ -247,14 +251,16 @@ type gen struct {
 	imports     map[string]importInfo
 	anonImports map[string]bool
 	values      map[ast.Expr]string
+	wrapErrors  bool
 }
 
-func newGen(pkg *packages.Package) *gen {
+func newGen(pkg *packages.Package, opts *GenerateOptions) *gen {
 	return &gen{
 		pkg:         pkg,
 		anonImports: make(map[string]bool),
 		imports:     make(map[string]importInfo),
 		values:      make(map[ast.Expr]string),
+		wrapErrors:  opts.WrapErrors,
 	}
 }
 
@@ -705,8 +711,13 @@ func (ig *injectorGen) funcProviderCall(lname string, c *call, injectSig outputS
 		if injectSig.cleanup {
 			ig.p(", nil")
 		}
-		// TODO(light): Give information about failing provider.
-		ig.p(", err\n")
+		if ig.g.wrapErrors {
+			fmtPkg := ig.g.qualifyImport("fmt", "fmt")
+			providerName := ig.g.qualifiedID(c.pkg.Name(), c.pkg.Path(), c.name)
+			ig.p(", %s.Errorf(\"%s: %%w\", %s)\n", fmtPkg, providerName, ig.errVar)
+		} else {
+			ig.p(", %s\n", ig.errVar)
+		}
 		ig.p("\t}\n")
 	}
 }
