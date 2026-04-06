@@ -29,6 +29,7 @@ func newBazService(config *baz.Config) *baz.Service {
 
 // wire.go:
 
+// wire.go:42
 func main() {
 	cfg := &baz.Config{
 		Foo: &foo.Config{1},

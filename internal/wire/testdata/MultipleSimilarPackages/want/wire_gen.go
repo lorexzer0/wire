@@ -32,22 +32,26 @@ func newMainService(mainConfig MainConfig) *MainService {
 
 // wire.go:
 
+// wire.go:28
 type MainConfig struct {
 	Foo *foo.Config
 	Bar *bar.Config
 	baz *baz.Config
 }
 
+// wire.go:34
 type MainService struct {
 	Foo *foo.Service
 	Bar *bar.Service
 	baz *baz.Service
 }
 
+// wire.go:40
 func (m *MainService) String() string {
 	return fmt.Sprintf("%d %d %d", m.Foo.Cfg.V, m.Bar.Cfg.V, m.baz.Cfg.V)
 }
 
+// wire.go:60
 func main() {
 	cfg := MainConfig{
 		Foo: &foo.Config{1},

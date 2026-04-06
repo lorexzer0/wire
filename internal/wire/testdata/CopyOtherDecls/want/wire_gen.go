@@ -19,10 +19,12 @@ func injectedMessage() string {
 
 // foo.go:
 
+// foo.go:28
 func main() {
 	fmt.Println(injectedMessage())
 }
 
+// foo.go:33
 // provideMessage provides a friendly user greeting.
 func provideMessage() string {
 	return "Hello, World!"

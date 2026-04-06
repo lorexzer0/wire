@@ -223,7 +223,8 @@ func copyNonInjectorDecls(g *gen, files []*ast.File, info *types.Info) {
 				g.p("// %s:\n\n", name)
 				first = false
 			}
-			// TODO(light): Add line number at top of each declaration.
+			pos := g.pkg.Fset.Position(decl.Pos())
+			g.p("// %s:%d\n", filepath.Base(pos.Filename), pos.Line)
 			g.writeAST(info, decl)
 			g.p("\n\n")
 		}

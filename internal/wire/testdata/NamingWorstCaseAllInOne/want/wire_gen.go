@@ -25,8 +25,10 @@ func inject(context3 context2.Context, err2 struct{}) (context, error) {
 
 // foo.go:
 
+// foo.go:31
 type context struct{}
 
+// foo.go:33
 func main() {
 	if _, ok := reflect.TypeOf(context{}).MethodByName("Provide"); !ok {
 		fmt.Println("ERROR: context.Provide renamed")
@@ -40,6 +42,7 @@ func main() {
 	fmt.Println(c)
 }
 
+// foo.go:46
 func Provide(context2_2 context2.Context) (context, error) {
 	var context3 = context2.Background()
 	_ = context2_2
@@ -47,5 +50,6 @@ func Provide(context2_2 context2.Context) (context, error) {
 	return context{}, nil
 }
 
+// foo.go:57
 func (context) Provide() {
 }

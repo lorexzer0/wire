@@ -37,6 +37,7 @@ var (
 
 // wire.go:
 
+// wire.go:46
 func main() {
 	svc := newBazService()
 	fmt.Println(svc.String())
