@@ -348,10 +348,9 @@ func (g *gen) inject(pos token.Pos, name string, sig *types.Signature, set *Prov
 		}
 		if c.kind == valueExpr {
 			if err := accessibleFrom(c.valueTypeInfo, c.valueExpr, g.pkg.PkgPath); err != nil {
-				// TODO(light): Display line number of value expression.
 				ts := types.TypeString(c.out, nil)
 				ec.add(notePosition(
-					g.pkg.Fset.Position(pos),
+					g.pkg.Fset.Position(c.valueExpr.Pos()),
 					fmt.Errorf("inject %s: value %s can't be used: %v", name, ts, err)))
 			}
 			if g.values[c.valueExpr] == "" {
