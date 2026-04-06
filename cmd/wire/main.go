@@ -38,13 +38,7 @@ import (
 )
 
 func main() {
-	subcommands.Register(subcommands.CommandsCommand(), "")
-	subcommands.Register(subcommands.FlagsCommand(), "")
-	subcommands.Register(subcommands.HelpCommand(), "")
-	subcommands.Register(&checkCmd{}, "")
-	subcommands.Register(&diffCmd{}, "")
-	subcommands.Register(&genCmd{}, "")
-	subcommands.Register(&showCmd{}, "")
+	registerCommands(subcommands.DefaultCommander)
 	flag.Parse()
 
 	// Initialize the default logger to log to stderr.
@@ -52,25 +46,33 @@ func main() {
 	log.SetPrefix("wire: ")
 	log.SetOutput(os.Stderr)
 
-	// TODO(rvangent): Use subcommands's VisitCommands instead of hardcoded map,
-	// once there is a release that contains it:
-	// allCmds := map[string]bool{}
-	// subcommands.DefaultCommander.VisitCommands(func(_ *subcommands.CommandGroup, cmd subcommands.Command) { allCmds[cmd.Name()] = true })
-	allCmds := map[string]bool{
-		"commands": true, // builtin
-		"help":     true, // builtin
-		"flags":    true, // builtin
-		"check":    true,
-		"diff":     true,
-		"gen":      true,
-		"show":     true,
-	}
+	allCmds := registeredCommands(subcommands.DefaultCommander)
 	// Default to running the "gen" command.
 	if args := flag.Args(); len(args) == 0 || !allCmds[args[0]] {
 		genCmd := &genCmd{}
 		os.Exit(int(genCmd.Execute(context.Background(), flag.CommandLine)))
 	}
 	os.Exit(int(subcommands.Execute(context.Background())))
+}
+
+// registerCommands adds all wire subcommands (and builtins) to the commander.
+func registerCommands(cdr *subcommands.Commander) {
+	cdr.Register(subcommands.CommandsCommand(), "")
+	cdr.Register(subcommands.FlagsCommand(), "")
+	cdr.Register(subcommands.HelpCommand(), "")
+	cdr.Register(&checkCmd{}, "")
+	cdr.Register(&diffCmd{}, "")
+	cdr.Register(&genCmd{}, "")
+	cdr.Register(&showCmd{}, "")
+}
+
+// registeredCommands returns a set of all command names registered with the commander.
+func registeredCommands(cdr *subcommands.Commander) map[string]bool {
+	cmds := map[string]bool{}
+	cdr.VisitCommands(func(_ *subcommands.CommandGroup, cmd subcommands.Command) {
+		cmds[cmd.Name()] = true
+	})
+	return cmds
 }
 
 // packages returns the slice of packages to run wire over based on f.
