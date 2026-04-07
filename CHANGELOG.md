@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.8.3
 
 ### New Features
 
@@ -26,3 +26,6 @@
 - Error messages for inaccessible value expressions now report the position of
   the value expression itself, not the injector function.
 - Replaced hardcoded command map with dynamic discovery via `VisitCommands`.
+- `wire.Bind` now validates that arguments are type expressions (`new(T)` or
+  `(*T)(nil)`). Passing variables, function calls, or other computed values
+  will now produce a clear error instead of potentially confusing type errors.

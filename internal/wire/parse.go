@@ -888,7 +888,16 @@ func processBind(fset *token.FileSet, info *types.Info, call *ast.CallExpr) (*If
 		return nil, notePosition(fset.Position(call.Pos()),
 			errors.New("call to Bind takes exactly two arguments"))
 	}
-	// TODO(light): Verify that arguments are simple expressions.
+	for i, arg := range call.Args {
+		if !isSimpleTypeExpr(arg) {
+			ordinal := "first"
+			if i == 1 {
+				ordinal = "second"
+			}
+			return nil, notePosition(fset.Position(arg.Pos()),
+				fmt.Errorf("%s argument to Bind must be a type expression (e.g. new(T) or (*T)(nil)), not a computed value", ordinal))
+		}
+	}
 	ifaceArgType := info.TypeOf(call.Args[0])
 	ifacePtr, ok := ifaceArgType.(*types.Pointer)
 	if !ok {
@@ -924,6 +933,26 @@ func processBind(fset *token.FileSet, info *types.Info, call *ast.CallExpr) (*If
 		Iface:    iface,
 		Provided: provided,
 	}, nil
+}
+
+// isSimpleTypeExpr reports whether expr is a type-only expression suitable
+// for use as an argument to wire.Bind. Valid forms are new(T) and (*T)(nil).
+func isSimpleTypeExpr(expr ast.Expr) bool {
+	call, ok := expr.(*ast.CallExpr)
+	if !ok {
+		return false
+	}
+	// new(T)
+	if id, ok := call.Fun.(*ast.Ident); ok && id.Name == "new" && len(call.Args) == 1 {
+		return true
+	}
+	// (*T)(nil) -- a type conversion call with nil as the argument
+	if len(call.Args) == 1 {
+		if id, ok := call.Args[0].(*ast.Ident); ok && id.Name == "nil" {
+			return true
+		}
+	}
+	return false
 }
 
 // processValue creates a value from a wire.Value call.
